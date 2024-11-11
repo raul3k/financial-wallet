@@ -1,0 +1,399 @@
+{
+	"info": {
+		"_postman_id": "6f769548-c508-4f6e-90ec-d659aa49f493",
+		"name": "Financial Wallet API",
+		"description": "API collection for the Financial Wallet service, including all routes organized by module with sample data and environment variables.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1084671"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "User Registration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"raul\",\n  \"password\": \"senha1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"raul\",\n  \"password\": \"senha1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wallet",
+			"item": [
+				{
+					"name": "Get Wallet Balance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/wallet/balance",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"wallet",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deposit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhdWwiLCJzdWIiOiJlZDgyNWEyYy0zYTA0LTRiNzItYTNlNC1lYzU3Mjc5NjE0ZTYiLCJpYXQiOjE3MzEzNTUyMjEsImV4cCI6MTczMTM1ODgyMX0.3wRHxZfAU87UGP4cz6SUuvqArQyhrF4h59HOQsE8l6Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 800\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/wallet/deposit",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"wallet",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \n  \"amount\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/wallet/withdraw",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"wallet",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhdWwiLCJzdWIiOiJlZDgyNWEyYy0zYTA0LTRiNzItYTNlNC1lYzU3Mjc5NjE0ZTYiLCJpYXQiOjE3MzEzNTUyMjEsImV4cCI6MTczMTM1ODgyMX0.3wRHxZfAU87UGP4cz6SUuvqArQyhrF4h59HOQsE8l6Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"raul2\",\n  \"amount\": 400\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/wallet/transfer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"wallet",
+								"transfer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Create Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fromUserId\": \"{{userId}}\",\n  \"toUserId\": \"recipient-id\",\n  \"amount\": 20\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/transactions/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Transactions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhdWwiLCJzdWIiOiJlZDgyNWEyYy0zYTA0LTRiNzItYTNlNC1lYzU3Mjc5NjE0ZTYiLCJpYXQiOjE3MzEzNTUyMjEsImV4cCI6MTczMTM1ODgyMX0.3wRHxZfAU87UGP4cz6SUuvqArQyhrF4h59HOQsE8l6Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fromUserId\": \"{{userId}}\",\n  \"toUserId\": \"recipient-id\",\n  \"amount\": 20\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/transactions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reverse Transaction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhdWwiLCJzdWIiOiJlZDgyNWEyYy0zYTA0LTRiNzItYTNlNC1lYzU3Mjc5NjE0ZTYiLCJpYXQiOjE3MzEzNTUyMjEsImV4cCI6MTczMTM1ODgyMX0.3wRHxZfAU87UGP4cz6SUuvqArQyhrF4h59HOQsE8l6Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/transactions/4ad01e5b-b39d-455c-a66f-e7361138fdbd/reverse",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions",
+								"4ad01e5b-b39d-455c-a66f-e7361138fdbd",
+								"reverse"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Monitoring",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/monitoring/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monitoring",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/monitoring/metrics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"monitoring",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "user-id-123",
+			"type": "string"
+		},
+		{
+			"key": "transactionId",
+			"value": "transaction-id-456",
+			"type": "string"
+		},
+		{
+			"key": "BearerToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhdWwiLCJzdWIiOiI3MmEwZjA3MC05OTk5LTQ2YzEtOTk3OS02MTZhNzAzNjY1Y2QiLCJpYXQiOjE3MzEzNDY3MjMsImV4cCI6MTczMTM1MDMyM30.wjXzKXm6FqEWPIn-5YkUBlkWIE5hoAAdUIzqLN7D5ow",
+			"type": "string"
+		}
+	]
+}

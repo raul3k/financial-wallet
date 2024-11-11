@@ -1,15 +1,17 @@
-// test/wallet/wallets.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { WalletsService } from '../../src/wallet/services/wallets.service';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { LoggingService } from '../../src/logging/services/logging.service';
-import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { TransactionsService } from '../../src/transactions/services/transactions.service';
+import {
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 
 describe('WalletsService', () => {
   let walletsService: WalletsService;
   let loggingService: LoggingService;
 
-  // Mock do PrismaService
   const prismaServiceMock = {
     wallet: {
       findUnique: jest.fn(),
@@ -17,9 +19,12 @@ describe('WalletsService', () => {
     },
   };
 
-  // Mock do LoggingService
   const loggingServiceMock = {
     log: jest.fn(),
+  };
+
+  const transactionsServiceMock = {
+    register: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -28,11 +33,18 @@ describe('WalletsService', () => {
         WalletsService,
         { provide: PrismaService, useValue: prismaServiceMock },
         { provide: LoggingService, useValue: loggingServiceMock },
+        {
+          provide: TransactionsService,
+          useValue: transactionsServiceMock,
+        },
       ],
     }).compile();
 
     walletsService = module.get<WalletsService>(WalletsService);
     loggingService = module.get<LoggingService>(LoggingService);
+
+    // Reset all mocks before each test
+    jest.clearAllMocks();
   });
 
   describe('getWalletBalance', () => {
@@ -40,7 +52,6 @@ describe('WalletsService', () => {
       const userId = 'user-id-123';
       const balance = 100;
 
-      // Mockando a resposta do banco de dados
       prismaServiceMock.wallet.findUnique.mockResolvedValue({ balance });
 
       const result = await walletsService.getBalance(userId);
@@ -54,7 +65,6 @@ describe('WalletsService', () => {
     it('should throw NotFoundException if the wallet does not exist', async () => {
       const userId = 'user-id-123';
 
-      // Simulando que o banco não retornou a carteira
       prismaServiceMock.wallet.findUnique.mockResolvedValue(null);
 
       await expect(walletsService.getBalance(userId)).rejects.toThrow(
@@ -69,32 +79,36 @@ describe('WalletsService', () => {
       const updateBalanceDto = { amount: 50 };
       const currentBalance = 100;
       const updatedBalance = 150;
+      const mockWallet = { id: 'wallet-id', userId, balance: currentBalance };
 
-      // Mockando a resposta do banco de dados
-      prismaServiceMock.wallet.findUnique.mockResolvedValue({
-        balance: currentBalance,
-      });
+      prismaServiceMock.wallet.findUnique.mockResolvedValue(mockWallet);
       prismaServiceMock.wallet.update.mockResolvedValue({
+        ...mockWallet,
         balance: updatedBalance,
       });
+      transactionsServiceMock.register.mockResolvedValue({});
 
-      const result = await walletsService.deposit(
-        userId,
-        updateBalanceDto,
-      );
+      const result = await walletsService.deposit(userId, updateBalanceDto);
 
       expect(result.balance).toBe(updatedBalance);
       expect(loggingService.log).toHaveBeenCalledWith(
         `Balance updated for wallet with user ID: ${userId}. New balance: ${updatedBalance}`,
       );
+      expect(transactionsServiceMock.register).toHaveBeenCalledWith({
+        senderWalletId: mockWallet.id,
+        receiverWalletId: mockWallet.id,
+        amount: updateBalanceDto.amount,
+      });
     });
 
     it('should throw BadRequestException if there are insufficient funds', async () => {
       const userId = 'user-id-123';
-      const updateBalanceDto = { amount: -200 }; // Tentativa de subtrair mais do que o saldo atual
+      const updateBalanceDto = { amount: -200 };
       const currentBalance = 100;
 
       prismaServiceMock.wallet.findUnique.mockResolvedValue({
+        id: 'wallet-id',
+        userId,
         balance: currentBalance,
       });
 
@@ -107,7 +121,6 @@ describe('WalletsService', () => {
       const userId = 'user-id-123';
       const updateBalanceDto = { amount: 50 };
 
-      // Simulando que o banco não retornou a carteira
       prismaServiceMock.wallet.findUnique.mockResolvedValue(null);
 
       await expect(

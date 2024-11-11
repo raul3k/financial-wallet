@@ -22,6 +22,11 @@ Logo após, utilize outro terminal (ou coloque o `-d` no compose up) e execute o
 
 `docker compose exec app npx prisma db pull`
 
+# Rodando os testes
+Pode rodar os testes rodando o comando:
+
+`docker compose exec app npm test`
+
 # Resumo das rotas:
 
 ## Autenticação (/auth)

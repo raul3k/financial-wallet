@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  wallet    Wallet?
+}
+
+model Wallet {
+  id                   String        @id @default(uuid()) @db.Uuid
+  userId               String        @unique @db.Uuid
+  balance              Float         @default(0)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  user                 User          @relation(fields: [userId], references: [id])
+  sentTransactions     Transaction[] @relation("SenderWallet")
+  receivedTransactions Transaction[] @relation("ReceiverWallet")
+}
+
+model Transaction {
+  id               String            @id @default(uuid()) @db.Uuid
+  senderWalletId   String            @db.Uuid
+  receiverWalletId String            @db.Uuid
+  amount           Float
+  status           TransactionStatus @default(pending)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  senderWallet     Wallet            @relation("SenderWallet", fields: [senderWalletId], references: [id])
+  receiverWallet   Wallet            @relation("ReceiverWallet", fields: [receiverWalletId], references: [id])
+}
+
+enum TransactionStatus {
+  pending
+  completed
+  failed
+  reversed
+}
